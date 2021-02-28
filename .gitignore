@@ -1,0 +1,4 @@
+.DS_Store/*
+img/.DS_Store
+scripts/globals.js
+node_modules
