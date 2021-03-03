@@ -7,9 +7,7 @@
     <title>Beyond Reality Face SDK - BRFv5 - Face Tracking for Browser/JavaScript - Minimal Webcam Example</title>
     <script src="Build/UnityLoader.js"></script>
     <link rel="stylesheet" href="style.css">
-    <script>
-        var unity = UnityLoader.instantiate("unityContainer", "Build/WebGL.json");
-    </script>
+
     <style>
         html,
         body {
@@ -32,20 +30,32 @@
 </head>
 
 <body>
-    <div id='container' style="width: 960px; height: 600px">
+    <canvas id="myCanvas">
+        Your browser does not support the canvas element.
+    </canvas>
+    <div id='container'>
         <video id="_webcam" style="display: none;" playsinline></video>
         <canvas id="_imageData"></canvas>
     </div>
-    <div id="unityContainer" style="width: 960px; height: 600px;"></div>
+    <div id="unityContainer" width="640" height="480"> </div>
 
-    <dir id="btn">
+    <br><br>
+    <div id="btn">
         <button onclick="load()">
             load
         </button>
         <button onclick="pass()">
             pass
         </button>
+        <br>
+        <input id="xxx" type="text" placeholder="x">
+        <br>
+        <input id="yyy" type="text" placeholder="y">
+        <br>
+        <input id="zzz" type="text" placeholder="z">
 
+        <br>
+        <button onclick="poss()">Position</button>
         <script>
 
             function pass() {
@@ -58,8 +68,23 @@
             function load() {
                 unity.SendMessage('ObjectContainer', 'LoadContent', "https://mirrar.s3.ap-south-1.amazonaws.com/amazingabhishek/AssetBundles/righter");
             }
+
+            function poss() {
+                let p = {
+                    x: document.getElementById("xxx").value,
+                    y: document.getElementById("yyy").value,
+                    z: document.getElementById("zzz").value
+                }
+
+                unity.SendMessage('Cube', 'SetPositioin', JSON.stringify(p));
+            }
         </script>
-    </dir>
+    </div>
+
+    <script>
+        var unity = UnityLoader.instantiate("unityContainer", "Build/WebGL.json");
+    </script>
+
     <script type="module">
 
         import { brfv5 } from './js/brfv5/brfv5__init.js'
@@ -164,18 +189,31 @@
             _brfv5Manager.update(ctx.getImageData(0, 0, _width, _height))
 
             const faces = _brfv5Manager.getFaces()
-            unity.SendMessage('ObjectContainer', 'setScale', 0.08);
+            unity.SendMessage('ObjectContainer', 'setScale', 0.1);
+            // unity.SendMessage('ObjectContainer', 'screenRatio', 1);
+            var canvas = document.getElementById("myCanvas");
+            var unityContainer = document.getElementById("unityContainer");
+            canvas.setAttribute('width', '640px');
+            canvas.setAttribute('height', '480px');
+            unityContainer.style.width = "640px"
+            unityContainer.style.height = "480px"
+
+            var context = canvas.getContext("2d");
+            context.font = "7px Arial";
+
             for (let i = 0; i < faces.length; i++) {
+
+                // console.log(`canvas: w: ${canvas.width}, h: ${canvas.height}`)
                 //width: 640, height: 480
                 let left = {
-                    x: parseFloat((faces[i].landmarks[2].x - 320) * 0.01),
-                    y: parseFloat((240 - faces[i].landmarks[2].y) * 0.01),
+                    x: parseFloat((faces[i].landmarks[2].x - 320) / 42),
+                    y: parseFloat(((240 - faces[i].landmarks[2].y) / 42) + 1),
                     z: 0
                 };
 
                 let right = {
-                    x: parseFloat((faces[i].landmarks[14].x - 320) / 64),
-                    y: parseFloat((240 - faces[i].landmarks[14].y) / 64),
+                    x: parseFloat((faces[i].landmarks[14].x - 320) / 42),
+                    y: parseFloat(((240 - faces[i].landmarks[14].y) / 42) + 1),
                     z: 0
                 };
 
@@ -193,17 +231,23 @@
                 let pos = {
                     vectors: []
                 };
+                context.clearRect(0, 0, canvas.width, canvas.height);
 
                 for (let j = 0; j < faces[i].landmarks.length; j++) {
 
+                    context.fillText(j, faces[i].landmarks[j].x, faces[i].landmarks[j].y);
                     pos.vectors.push({
-                        x: parseFloat((faces[i].landmarks[j].x) / 64),
-                        y: parseFloat((240 - faces[i].landmarks[j].y) / 64),
+                        x: parseFloat(((faces[i].landmarks[j].x) - 320) / 42),
+                        y: parseFloat(((240 - (faces[i].landmarks[j].y)) / 42) + 1),
+                        // x: parseFloat(((faces[i].landmarks[j].x) / 64)),
+                        // y: parseFloat(((240 - faces[i].landmarks[j].y) / 64)),
                         z: 0
                     })
                 }
-                console.log(`this is pos ${pos.vectors[0].x} ${pos.vectors[0].y}`)
+                // console.log(`this is pos ${pos.vectors[0].x} ${pos.vectors[0].y}`)
                 unity.SendMessage('ObjectContainer', 'printMask', JSON.stringify(pos));
+                unity.SendMessage('ObjectContainer', 'TestSubject', JSON.stringify(right));
+                unity.SendMessage('ObjectContainer', 'TrsnsformObject', JSON.stringify(finalObject));
 
                 const face = faces[i]
                 if (face.state === brfv5.BRFv5State.FACE_TRACKING) {

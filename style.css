@@ -4,8 +4,6 @@
 
 #unityContainer{
     position: absolute;
-    width: 640px !important; 
-    height: 480px !important;
     background-color: rgba(0, 0, 0, 0) !important;
     z-index: 100;
 }
@@ -13,4 +11,10 @@
 #btn{
     margin-top: 500px;
 	position: relative;
+}
+
+#myCanvas {
+    background-color: rgba(0, 0, 0, 0) !important;
+    z-index: 101;
+    position: absolute;
 }
