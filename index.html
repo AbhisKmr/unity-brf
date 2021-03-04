@@ -52,9 +52,15 @@
         <br>
         <input id="yyy" type="text" placeholder="Drag Force">
         <br>
-
         <br>
         <button onclick="poss()">Dangling</button>
+        <br>
+        <div>
+            <input id="lx" type="number" placeholder="left-x">
+            <input id="ly" type="number" placeholder="left-y">
+            <input id="rx" type="number" placeholder="right-x">
+            <input id="ry" type="number" placeholder="right-y">
+        </div>
         <script>
 
             function pass() {
@@ -198,22 +204,27 @@
             var context = canvas.getContext("2d");
             context.font = "7px Arial";
 
-            for (let i = 0; i < faces.length; i++) {
+            var left_x = document.getElementById("lx").value;
+            var left_y = document.getElementById("ly").value;
+            var right_x = document.getElementById("rx").value;
+            var right_y = document.getElementById("ry").value;
 
+            for (let i = 0; i < faces.length; i++) {
                 // console.log(`canvas: w: ${canvas.width}, h: ${canvas.height}`)
                 //width: 640, height: 480
+                console.log(`${left_x} :: ${left_y} :: ${right_x} :: ${right_y}`)
                 let left = {
-                    x: parseFloat((faces[i].landmarks[2].x - 320) / 42),
-                    y: parseFloat(((240 - faces[i].landmarks[2].y) / 42) + 1),
+                    x: parseFloat(((faces[i].landmarks[1].x + + left_x) - 320) / 42),
+                    y: parseFloat(((240 - (faces[i].landmarks[1].y) + + left_y) / 42) + 1),
                     z: 0
                 };
 
                 let right = {
-                    x: parseFloat((faces[i].landmarks[14].x - 320) / 42),
-                    y: parseFloat(((240 - faces[i].landmarks[14].y) / 42) + 1),
+                    x: parseFloat(((faces[i].landmarks[15].x + +right_x) - 320) / 42),
+                    y: parseFloat(((240 - (faces[i].landmarks[15].y + + right_y)) / 42) + 1),
                     z: 0
                 };
-
+                console.log(`${left.x} :: ${right.y}`)
                 let finalObject = {
                     positionForRight: right,
                     positionForLeft: left,
@@ -232,7 +243,7 @@
 
                 for (let j = 0; j < faces[i].landmarks.length; j++) {
 
-//                     context.fillText(j, faces[i].landmarks[j].x, faces[i].landmarks[j].y);
+                    context.fillText(j, faces[i].landmarks[j].x, faces[i].landmarks[j].y);
                     pos.vectors.push({
                         x: parseFloat(((faces[i].landmarks[j].x) - 320) / 42),
                         y: parseFloat(((240 - (faces[i].landmarks[j].y)) / 42) + 1),
