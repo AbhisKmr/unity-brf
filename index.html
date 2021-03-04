@@ -243,7 +243,7 @@
 
                 for (let j = 0; j < faces[i].landmarks.length; j++) {
 
-                    context.fillText(j, faces[i].landmarks[j].x, faces[i].landmarks[j].y);
+                    //context.fillText(j, faces[i].landmarks[j].x, faces[i].landmarks[j].y);
                     pos.vectors.push({
                         x: parseFloat(((faces[i].landmarks[j].x) - 320) / 42),
                         y: parseFloat(((240 - (faces[i].landmarks[j].y)) / 42) + 1),
