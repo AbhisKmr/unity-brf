@@ -203,14 +203,14 @@
                 // console.log(`canvas: w: ${canvas.width}, h: ${canvas.height}`)
                 //width: 640, height: 480
                 let left = {
-                    x: parseFloat((faces[i].landmarks[1].x - 320) / 42),
-                    y: parseFloat(((240 - faces[i].landmarks[1].y) / 42) + 1),
+                    x: parseFloat((faces[i].landmarks[2].x - 320) / 42),
+                    y: parseFloat(((240 - faces[i].landmarks[2].y) / 42) + 1),
                     z: 0
                 };
 
                 let right = {
-                    x: parseFloat((faces[i].landmarks[15].x - 320) / 42),
-                    y: parseFloat(((240 - faces[i].landmarks[15].y) / 42) + 1),
+                    x: parseFloat((faces[i].landmarks[14].x - 320) / 42),
+                    y: parseFloat(((240 - faces[i].landmarks[14].y) / 42) + 1),
                     z: 0
                 };
 
