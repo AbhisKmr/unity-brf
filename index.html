@@ -37,7 +37,7 @@
         <video id="_webcam" style="display: none;" playsinline></video>
         <canvas id="_imageData"></canvas>
     </div>
-    <div id="unityContainer" width="640" height="480"> </div>
+    <div id="unityContainer"> </div>
 
     <br><br>
     <div id="btn">
@@ -48,14 +48,13 @@
             pass
         </button>
         <br>
-        <input id="xxx" type="text" placeholder="x">
+        <input id="xxx" type="text" placeholder="Stiffness Force">
         <br>
-        <input id="yyy" type="text" placeholder="y">
+        <input id="yyy" type="text" placeholder="Drag Force">
         <br>
-        <input id="zzz" type="text" placeholder="z">
 
         <br>
-        <button onclick="poss()">Position</button>
+        <button onclick="poss()">Dangling</button>
         <script>
 
             function pass() {
@@ -73,10 +72,9 @@
                 let p = {
                     x: document.getElementById("xxx").value,
                     y: document.getElementById("yyy").value,
-                    z: document.getElementById("zzz").value
                 }
 
-                unity.SendMessage('Cube', 'SetPositioin', JSON.stringify(p));
+                unity.SendMessage('ObjectContainer', 'SetMovement', JSON.stringify(p));
             }
         </script>
     </div>
@@ -188,7 +186,7 @@
 
             _brfv5Manager.update(ctx.getImageData(0, 0, _width, _height))
 
-            const faces = _brfv5Manager.getFaces()
+            const faces = _brfv5Manager.getFaces();
             unity.SendMessage('ObjectContainer', 'setScale', 0.1);
             // unity.SendMessage('ObjectContainer', 'screenRatio', 1);
             var canvas = document.getElementById("myCanvas");
@@ -197,7 +195,6 @@
             canvas.setAttribute('height', '480px');
             unityContainer.style.width = "640px"
             unityContainer.style.height = "480px"
-
             var context = canvas.getContext("2d");
             context.font = "7px Arial";
 
@@ -206,14 +203,14 @@
                 // console.log(`canvas: w: ${canvas.width}, h: ${canvas.height}`)
                 //width: 640, height: 480
                 let left = {
-                    x: parseFloat((faces[i].landmarks[2].x - 320) / 42),
-                    y: parseFloat(((240 - faces[i].landmarks[2].y) / 42) + 1),
+                    x: parseFloat((faces[i].landmarks[1].x - 320) / 42),
+                    y: parseFloat(((240 - faces[i].landmarks[1].y) / 42) + 1),
                     z: 0
                 };
 
                 let right = {
-                    x: parseFloat((faces[i].landmarks[14].x - 320) / 42),
-                    y: parseFloat(((240 - faces[i].landmarks[14].y) / 42) + 1),
+                    x: parseFloat((faces[i].landmarks[15].x - 320) / 42),
+                    y: parseFloat(((240 - faces[i].landmarks[15].y) / 42) + 1),
                     z: 0
                 };
 
@@ -245,8 +242,9 @@
                     })
                 }
                 // console.log(`this is pos ${pos.vectors[0].x} ${pos.vectors[0].y}`)
-                unity.SendMessage('ObjectContainer', 'printMask', JSON.stringify(pos));
+                // unity.SendMessage('ObjectContainer', 'printMask', JSON.stringify(pos));
                 unity.SendMessage('ObjectContainer', 'TestSubject', JSON.stringify(right));
+                unity.SendMessage('ObjectContainer', 'TestSubject2', JSON.stringify(left));
                 unity.SendMessage('ObjectContainer', 'TrsnsformObject', JSON.stringify(finalObject));
 
                 const face = faces[i]
