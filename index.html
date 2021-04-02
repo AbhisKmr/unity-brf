@@ -286,29 +286,12 @@
                     pos.vectors.push({
                         x: parseFloat(((faces[i].landmarks[j].x) - 320) / 42),
                         y: parseFloat(((240 - (faces[i].landmarks[j].y)) / 42) + 1),
-                        z: 0
+                        z: -5
                     })
                 }
-
-                let faceWidth = distanceBetween(faces[i].landmarks[0], faces[i].landmarks[16])
-                let faceHeight = distanceBetween(faces[i].landmarks[27], faces[i].landmarks[8]);
-                let forhead = distanceBetween(faces[i].landmarks[27], faces[i].landmarks[30]);
-
-                let fullFaceHeight = faceHeight + forhead;
-
-                let faceCenter = {
-                    x: (((faces[i].landmarks[0].x + faces[i].landmarks[16].x) / 2) - 320) / 42,
-                    y: ((240 - faces[i].landmarks[30].y) / 42) + 1.5
-                }
-
-                let mask = {
-                    scale: { x: faceWidth / 6, y: fullFaceHeight / 7 },
-                    position: { x: faceCenter.x, y: faceCenter.y, z: -5 }
-                }
-
-                console.log(JSON.stringify(pos));
-
-                unity.SendMessage('Earring', 'FaceMask', JSON.stringify(mask))
+                // console.log(JSON.stringify(pos));
+                unity.SendMessage('Facemask', 'DrawFacemask', JSON.stringify(pos))
+                // unity.SendMessage('Earring', 'FaceMask', JSON.stringify(mask))
                 // unity.SendMessage('ObjectContainer', 'printMask', JSON.stringify(pos))
 
                 const face = faces[i]
